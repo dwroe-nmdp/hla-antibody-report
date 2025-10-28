@@ -118,7 +118,7 @@ These are the constraints (invariants) defined within this resource:
       workingSampleId = 3739373468
       patientSpecimenId = 4343847748
     }
-  class "Immunoassay Kit" <<ImmunoAssayKit>>
+  class "Immunoassay Kit" <<ImmunoassayKit>>
     {
       deviceId = 100238373678
     }

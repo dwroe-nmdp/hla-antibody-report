@@ -11,7 +11,7 @@
       "telecom": [
         {
           "system": "email",
-          "value": "dwroe@nmndp.org",
+          "value": "fhir@nmndp.org",
           "use": "old"
         }
       ]
@@ -112,7 +112,7 @@
           {
             "code": "Resource",
             "profile": [
-              "https://fhir.nmdp.org/ig/HlaAntibodyReport/StructureDefinition/hla-immuno-assay-working-sample"
+              "https://fhir.nmdp.org/ig/HlaAntibodyReport/StructureDefinition/hla-immunoassay-working-sample"
             ]
           }
         ],
@@ -137,7 +137,7 @@
           {
             "code": "Resource",
             "profile": [
-              "https://fhir.nmdp.org/ig/HlaAntibodyReport/StructureDefinition/hla-immuno-assay-kit"
+              "https://fhir.nmdp.org/ig/HlaAntibodyReport/StructureDefinition/hla-immunoassay-kit"
             ]
           }
         ],
@@ -163,7 +163,7 @@
           {
             "code": "Resource",
             "profile": [
-              "https://fhir.nmdp.org/ig/HlaAntibodyReport/StructureDefinition/hla-immuno-assay-interpretation"
+              "https://fhir.nmdp.org/ig/HlaAntibodyReport/StructureDefinition/hla-immunoassay-interpretation"
             ]
           }
         ],

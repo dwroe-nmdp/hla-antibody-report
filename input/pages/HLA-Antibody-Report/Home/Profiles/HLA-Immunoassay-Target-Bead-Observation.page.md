@@ -1,5 +1,5 @@
 ---
-canonical: https://fhir.nmdp.org/ig/HlaAntibodyReport/StructureDefinition/hla-immunoassay-bead-observation
+canonical: https://fhir.nmdp.org/ig/HlaAntibodyReport/StructureDefinition/hla-immunoassay-target-bead-observation
 expand: 2
 ---
 

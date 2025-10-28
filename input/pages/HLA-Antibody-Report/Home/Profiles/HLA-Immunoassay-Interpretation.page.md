@@ -1,5 +1,5 @@
 ---
-canonical: https://fhir.nmdp.org/ig/HlaAntibodyReport/StructureDefinition/hla-immunoassay-kit
+canonical: https://fhir.nmdp.org/ig/HlaAntibodyReport/StructureDefinition/hla-immunoassay-interpretation
 expand: 2
 ---
 
