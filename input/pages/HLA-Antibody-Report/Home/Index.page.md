@@ -1,6 +1,7 @@
 <!-- Graphic-style Header -->
 <p align="center">
-  <img src="https://immunepolymorphismsociety.org/img/logo120.png" alt="SIP Logo" width="120" />
+  <img src="https://www.nmdp.org/-/media/project/nmdp/global/images/logos/nmdp_logo_tm_300x96.svg?h=33&iar=0&w=279&rev=3e13c88086fd4134b9c8588dd337bf15&hash=962753EC04F56EC53A91717E3F2DB963" alt="NMDP Logo" width="150"/>
+<img src="https://immunepolymorphismsociety.org/img/logo120.png" alt="SIP Logo" width="120" />
 </p>
 
 <h1 align="center">HLA Antibody Diagnostic Report Implementation Guide</h1>
@@ -10,9 +11,13 @@
 
 ---
 
-## Use Case Description
+## {{page-title}} 
+{{index:root}}
 
-Here is the general use case for this guide:
+---
+## Use Case Description
+---
+Here is the general use case for this guide
 
 <plantuml>
 "Transplant Center" -> "Lab": Request
@@ -25,12 +30,15 @@ Here is the general use case for this guide:
 "NMDP FHIR" -> "LIMS FHIR": Conformance
 "NMDP FHIR" -> "NMDP Antibody Service": All-Data
 "NMDP Antibody Service" -> "NMDP MatchSource": Antibody-Profile
-"NMDP MatchSource" -> "Transplant Center": Cross-Match
+"NMDP MatchSource" -> "Transplant Center": Virtual Cross-Match
 </plantuml>
 
----
+
 
 ## Overview
+---
+
+# HLA Antibody Diagnostic Report
 
 A consolidated laboratory report on the execution of solid-phase immunoassay based on the work of the HAML working group, maintained [here](https://github.com/immunomath/haml).
 
@@ -47,16 +55,13 @@ A solid-phase-panel analysis with modifications/preparations/dilutions applied t
 
 * **assay-id**: A unique identifier for this assay
 * **assay-date**
+* **assay-kit**
 * **working-sample**
-* **interpretation**
-* **interpretation-software**: Software used for analysis
-* **interpretation-software-version**: Version of the software used
-* **positive-serum-id**: Identifier for the positive control serum
-* **negative-serum-id**: Identifier for the negative control serum
-* **bead**: Individual beads contained within this panel
-* **Raw-MFI-divider**: Constant used for comparing multiple analysis machines
-
-  * *Note*: Devices may have systematic biases on the same sample. This constant helps calibrate raw MFI across batches.
+* **assay-interpretation**
+* **negative-serum**: Reference for the negative control serum
+* **positive-serum**: Reference for the positive control serum
+* **target-bead-observation**: Individual beads contained within this panel
+* **control-bead-observation**: Individual beads contained within this panel
 
 ---
 
@@ -64,8 +69,13 @@ A solid-phase-panel analysis with modifications/preparations/dilutions applied t
 
 * **kit-manufacturer**: Company or institution that developed the kit
 * **kit-description**
+* **solid-phase-panel**
 * **catalog-number**: Identifier for the specific kit used
 * **lot-number**: Identifier for the lot used
+* **interpretation-software**: Software used for analysis
+* **interpretation-software-version**: Version of the software used
+* **Raw-MFI-divider**: Constant used for comparing multiple analysis machines
+  * *Note*: Devices may have systematic biases on the same sample. This constant helps calibrate raw MFI across batches.
 
 ---
 
@@ -79,9 +89,9 @@ Interpretation includes the outcome of the assay: which antigens/specificities a
 * **reject-assay**: Boolean indicating if the assay was rejected
 * **reject-reason**: Reason for rejecting the assay
 * **failure-code**: Failure code from the assay run
+* **negative-specificities**: HLA GLstring of negatively reactive HLA
 * **positive-specificities**: HLA GLstring of positively reactive HLA
 * **questionable-specificities**: HLA GLstring of questionably reactive HLA
-* **negative-specificities**: HLA GLstring of negatively reactive HLA
 
 ---
 
@@ -91,10 +101,9 @@ A sample (likely blood) drawn from a patient.
 
 ### Elements
 
-* **sample-id**: Unique identifier for this sample
+* **working-sample-id**: Unique identifier for this sample
 * **sample-datetime**: Date and time when the sample was drawn
 * **testing-laboratory**: Identifier for the lab
-* **assay**: One or more assay elements performed on this sample
 
 ### Working Sample (Preparation)
 
@@ -102,25 +111,33 @@ A processed portion of the sample prepared for panel analysis.
 
 #### Elements
 
-* **working-sample-id**: Unique identifier for this working sample
 * **treatment**: Process performed during preparation
-* **dilution**: Describes dilution ratio and substance used
-* **solid-phase-panel**
-* **method**
-* **ratio**: Dilution ratio (usually between 0 and 1)
+* **method**: Ex. dilution
 * **diluent**: Description of the diluent substance/buffer
+* **ratio**: Dilution ratio (usually between 0 and 1)
 
 ---
 
-## Bead Result
+## Serum
+
+Control serum for assay.
+
+### Elements
+
+* **serum-id**: Unique identifier for this sample
+* **control-type**: Negative or positive control serum
+
+---
+
+## Target Bead Result
 
 Describes a single bead within a solid phase panel.
 
 ### Elements
 
 * **bead-info**: Specificity and identifiers of the bead
-* **raw-data**: Measured MFI or raw data
-* **converted-data**: Converted MFIs, formulas, interpretations
+* **bead-type**: Target
+* **sample-ref**: Working sample
 * **raw-MFI**: Actual measured luminescence
 * **bead-count**
 * **formula**: Transformation applied to raw-MFI
@@ -130,11 +147,28 @@ Describes a single bead within a solid phase panel.
 
 ---
 
-### Bead Interpretation Elements
+### Target Bead Interpretation Elements
 
 * **classification-entity**: Person/entity who performed interpretation
 * **interpretation-reason**: Rationale (e.g., MFI threshold of 500)
 * **bead-classification**: *Positive* / *Negative* / *Borderline* / *Unspecified*
 * **bead-rank**: Numerical rank of bead reactivity
+
+---
+
+## Control Bead Result
+
+Describes a single control bead within a solid phase panel.
+
+### Elements
+
+* **bead-info**: Specificity and identifiers of the bead
+* **target-bead-ref**: Target bead reference of the control bead
+* **sample-ref**: Working sample, negative or positive control serum
+* **bead-type**: Negative or positive control bead
+* **raw-MFI**: Actual measured luminescence
+* **bead-count**
+* **formula**: Transformation applied to raw-MFI
+* **adjusted-MFI**: Normalized value for clinical decision-making
 
 ---
